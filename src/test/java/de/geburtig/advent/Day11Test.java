@@ -14,6 +14,16 @@ class Day11Test {
 
     @Test
     void resolvePuzzle2() throws Exception {
-        assertEquals("99840", subject.resolvePuzzle2());
+        assertEquals("20683044837", subject.resolvePuzzle2());
+    }
+
+    @Test
+    void resolveExample1() throws Exception {
+        assertEquals("10605", subject.resolveExample1());
+    }
+
+    @Test
+    void resolveExample2() throws Exception {
+        assertEquals("2713310158", subject.resolveExample2());
     }
 }

@@ -7,35 +7,49 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.LongFunction;
+import java.util.function.LongUnaryOperator;
 import java.util.stream.IntStream;
 
 public class Day11 extends DayBase {
+
+    public String resolveExample1() throws Exception {
+        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/input_day11_example.txt"));
+        game.worryOperator = old -> old / 3;
+        game.rounds(20);
+        return String.valueOf(game.calculateResult());
+    }
+
+    public String resolveExample2() throws Exception {
+        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/input_day11_example.txt"));
+        // Kleinstes gemeinsames Vielfaches der Divisoren ist 96577
+        game.worryOperator = old -> old % 96577;
+        game.rounds(10_000);
+        return String.valueOf(game.calculateResult());
+    }
 
     @Override
     public String resolvePuzzle1() throws Exception {
         KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/input_day11.txt"));
         game.worryOperator = old -> old / 3;
         game.rounds(20);
-        int result = game.calculateResult();
-        return String.valueOf(result);
+        return String.valueOf(game.calculateResult());
     }
 
     @Override
     public String resolvePuzzle2() throws Exception {
         KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/input_day11.txt"));
+        // Kleinstes gemeinsames Vielfaches der Divisoren ist 9699690
+        game.worryOperator = old -> old % 9699690;
         game.rounds(10_000);
-        int result = game.calculateResult();
-        return String.valueOf(result);
+        return String.valueOf(game.calculateResult());
     }
 
     static class KeepAwayGame {
         private final List<Monkey> monkeys = new ArrayList<>();
 
+        // Effect on item worry level after monkey ends inspection
         LongUnaryOperator worryOperator = old -> old;
-
-        private static final LongBinaryOperator add = Math::addExact;
-        private static final LongBinaryOperator multiply = Math::multiplyExact;
 
 
         KeepAwayGame(final Scanner scanner) {
@@ -44,35 +58,27 @@ public class Day11 extends DayBase {
                 String monkeySection = scanner.next();
                 String[] lines = monkeySection.split("\n");
 
-                List<Item> items = Arrays.stream(lines[1].substring(18).split(", ")).map(i -> new Item(Integer.parseInt(i))).toList();
+                List<Item> items = Arrays.stream(lines[1].substring(18).split(", ")).map(i -> new Item(Long.parseLong(i))).toList();
 
                 String substring = lines[2].substring(23);
                 String[] part = substring.split(" ");
-                LongUnaryOperator operation = new LongUnaryOperator() {
-                    @Override
-                    public long applyAsLong(long operand) {
-                        long value = part[1].equals("old") ? operand : Long.parseLong(part[1]);
-                        return switch (part[0]) {
-                            case "+" -> add.applyAsLong(operand, value);
-                            case "*" -> multiply.applyAsLong(operand, value);
-                            default  -> throw new IllegalStateException("Don't know what to do with \"" + part[0] + "\"");
-                        };
-                    }
+                LongUnaryOperator operation = operand -> {
+                    long value = part[1].equals("old") ? operand : Long.parseLong(part[1]);
+                    return switch (part[0]) {
+                        case "+" -> Math.addExact(operand, value);
+                        case "*" -> Math.multiplyExact(operand, value);
+                        default  -> throw new IllegalStateException("Don't know what to do with \"" + part[0] + "\"");
+                    };
                 };
 
                 substring = lines[3].substring(8);
                 if (!substring.startsWith("divisible by ")) {
                     throw new IllegalStateException("Don't know what to do with \"" + lines[3] + "\"");
                 }
-                int testValue = Integer.parseInt(lines[3].substring(21));
+                long testValue = Long.parseLong(lines[3].substring(21));
                 int ifTrue = Integer.parseInt(lines[4].replace("    If true: throw to monkey ", ""));
                 int ifFalse = Integer.parseInt(lines[5].replace("    If false: throw to monkey ", ""));
-                LongFunction<Monkey> test = new LongFunction<>() {
-                    @Override
-                    public Monkey apply(long value) {
-                        return (value % testValue == 0) ? monkeys.get(ifTrue) : monkeys.get(ifFalse);
-                    }
-                };
+                LongFunction<Monkey> test = value -> (value % testValue == 0) ? monkeys.get(ifTrue) : monkeys.get(ifFalse);
 
                 Monkey monkey = new Monkey(this, operation, test);
                 monkey.items.addAll(items);
@@ -88,28 +94,24 @@ public class Day11 extends DayBase {
             monkeys.forEach(Monkey::turn);
         }
 
-        int calculateResult() {
-            int[] ints = monkeys.stream().mapToInt(Monkey::getInspections).sorted().toArray();
-            int[] relevant = monkeys.stream().mapToInt(Monkey::getInspections).sorted().skip(6).toArray();
-            return relevant[0] * relevant[1];
+        long calculateResult() {
+            return monkeys.stream().mapToLong(Monkey::getInspectionCount).sorted().skip(monkeys.size() - 2).reduce(1, Math::multiplyExact);
         }
     }
 
     @RequiredArgsConstructor
     static class Monkey {
-
         private final KeepAwayGame game;
-
         private final List<Item> items = new ArrayList<>();
         private final LongUnaryOperator operation;
         private final LongFunction<Monkey> test;
-        private @Getter int inspections = 0;
+        private @Getter long inspectionCount = 0;
 
         void turn() {
             Iterator<Item> iterator = items.iterator();
             while (iterator.hasNext()) {
                 Item item = iterator.next();
-                ++inspections;
+                ++inspectionCount;
 
                 // Inspect item and update worry level
                 item.setWorryLevel(operation.applyAsLong(item.worryLevel));
@@ -123,8 +125,7 @@ public class Day11 extends DayBase {
         }
     }
 
-    @Data
-    @AllArgsConstructor
+    @Data @AllArgsConstructor
     static class Item {
         private long worryLevel;
     }
