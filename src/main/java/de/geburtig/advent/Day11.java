@@ -65,8 +65,8 @@ public class Day11 extends DayBase {
                 LongUnaryOperator operation = operand -> {
                     long value = part[1].equals("old") ? operand : Long.parseLong(part[1]);
                     return switch (part[0]) {
-                        case "+" -> Math.addExact(operand, value);
-                        case "*" -> Math.multiplyExact(operand, value);
+                        case "+" -> operand + value;
+                        case "*" -> operand * value;
                         default  -> throw new IllegalStateException("Don't know what to do with \"" + part[0] + "\"");
                     };
                 };
