@@ -1,43 +1,39 @@
 package de.geburtig.advent;
 
 import de.geburtig.advent.base.DayBase;
+import lombok.Setter;
 import lombok.Value;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static de.geburtig.advent.Day17.Chamber.CHECK_FOR_MATRIX_REDUCE_AT;
 import static de.geburtig.advent.Day17.Chamber.MATRIX_HEIGHT;
 
 public class Day17 extends DayBase {
 
-    private static boolean printWhenObjectDown = false;
-
     public String resolveExample1() {
         Game game = new Game(getLinesFromInputFile("/input_day17_example.txt").get(0));
-        while (game.chamber.objectCount <= 2022) {
-            game.turn();
-        }
+        game.setEndObjectDropsAfter(2022);
+        game.process();
         return String.valueOf(game.chamber.overallTowerHeight);
     }
 
     @Override
     public String resolvePuzzle1() throws Exception {
         Game game = new Game(getLinesFromInputFile("/input_day17.txt").get(0));
-        while (game.chamber.objectCount <= 2022) {
-            game.turn();
-        }
+        game.setEndObjectDropsAfter(2022);
+        game.process();
         return String.valueOf(game.chamber.overallTowerHeight);
     }
 
     public String resolveExample2() {
         Game game = new Game(getLinesFromInputFile("/input_day17_example.txt").get(0));
+        game.setEndObjectDropsAfter(1_000_000_000_000L);
+        game.setRepetitionOptimization(true);
 
         int period = 10;
         AtomicInteger secs = new AtomicInteger();
@@ -49,21 +45,33 @@ public class Day17 extends DayBase {
             System.out.println("Tower height after " + secs.addAndGet(period) + " seconds and " + game.chamber.objectCount + " fallen rocks: " + game.chamber.overallTowerHeight + " (" + df.format(l) + "%)");
         }, period, period, TimeUnit.SECONDS);
 
-        while (game.chamber.objectCount <= 1_000_000_000_000L) {
-            game.turn();
-        }
+        game.process();
         return String.valueOf(game.chamber.overallTowerHeight);
     }
 
     @Override
     public String resolvePuzzle2() throws Exception {
-        return "0";
+        Game game = new Game(getLinesFromInputFile("/input_day17.txt").get(0));
+        game.setEndObjectDropsAfter(1_000_000_000_000L);
+        game.setRepetitionOptimization(true);
+        game.process();
+        return String.valueOf(game.chamber.overallTowerHeight);
     }
+
+    record Drop(int obj, int x) {};
+
+    record State(long objects, long towerHeight) {};
 
     class Game {
         private final Chamber chamber = new Chamber();
         int seqIdx = 0;
         String moveSequence;
+        private @Setter long endObjectDropsAfter = 0;
+
+        private @Setter boolean repetitionOptimization = false;
+        private int dropSequenceIdx = 0;
+        private final List<Drop> dropSequence = new ArrayList<>(5);
+        private State lastRepetitionState = null;
 
         public Game(String moveSequence) {
             this.moveSequence = moveSequence;
@@ -76,7 +84,7 @@ public class Day17 extends DayBase {
             return c;
         }
 
-        void turn() {
+        boolean turnAndCheckForEnd() {
             if (chamber.rock.downFree()) {
                 --chamber.rock.y;
 
@@ -87,10 +95,45 @@ public class Day17 extends DayBase {
                     chamber.rock.moveRightIfPossible();
                 }
             } else {
+                if (repetitionOptimization && chamber.objectCount > 1000) {
+                    // Search for repetitions in the drop pattern
+                    if (dropSequence.size() < 5) {
+                        dropSequence.add(new Drop(chamber.rock.shape.id, chamber.rock.x));
+                    } else {
+                        Drop drop = dropSequence.get(dropSequenceIdx);
+                        if (dropSequence.size() < 10) {
+                            dropSequence.add(new Drop(chamber.rock.shape.id, chamber.rock.x));
+                        }
+                        if (drop.obj == chamber.rock.shape.id && drop.x == chamber.rock.x) {
+                            if (++dropSequenceIdx == dropSequence.size()) {
+                                State state = new State(chamber.objectCount, chamber.overallTowerHeight);
+                                if (lastRepetitionState != null) {
+                                    long objectDelta = state.objects - lastRepetitionState.objects;
+                                    long towerGrowth = state.towerHeight - lastRepetitionState.towerHeight;
+                                    System.out.println("Got sequence after " + chamber.objectCount + " drops: objectDelta=" + objectDelta + ", towerGrowth=" + towerGrowth);
+
+                                    System.out.println("Performing repetition...");
+                                    while (chamber.objectCount + objectDelta < endObjectDropsAfter) {
+                                        chamber.objectCount += objectDelta;
+                                        chamber.overallTowerHeight += towerGrowth;
+                                    }
+                                    System.out.println("Done repetition sequence.");
+                                }
+                                lastRepetitionState = state;
+                                dropSequenceIdx = 0;
+                            }
+                        } else {
+                            dropSequenceIdx = 0;
+                        }
+                    }
+                }
+
                 chamber.fixRockAndInitNextOne();
                 makeFirst4Movements();
                 checkAndCutMatrix();
             }
+
+            return chamber.objectCount > endObjectDropsAfter;
         }
 
         private void checkAndCutMatrix() {
@@ -123,6 +166,12 @@ public class Day17 extends DayBase {
             }
             chamber.rock.x += movement;
         }
+
+        public void process() {
+            do {
+                if (turnAndCheckForEnd()) break;
+            } while (true);
+        }
     }
 
     class Chamber {
@@ -153,26 +202,6 @@ public class Day17 extends DayBase {
         private void initNewRock() {
             rock = new Rock(Shape.of(objectCount++ % Shape.SHAPES.length), this);
         }
-
-/*
-        void print(boolean printFallingObject) {
-            System.out.println("After rock " + (objectCount - 1) + " (overallTowerHeight=" + overallTowerHeight + "):");
-            for (int y = rock.y + rock.shape.height - 1; y > 0; --y) {
-                String line = "|";
-                for (int x = 0; x < matrix.length; ++x) {
-                    if (printFallingObject) {
-                        boolean isRock = rock.isHere(x, y);
-                        line += isRock ? "@" : matrix[x][y] == 1 ? "#" : ".";
-                    } else {
-                        line += matrix[x][y] == 1 ? "#" : ".";
-                    }
-                }
-                System.out.println(line + "|");
-            }
-            System.out.println("+-------+");
-            System.out.println();
-        }
-*/
     }
 
     class Rock {
@@ -206,12 +235,6 @@ public class Day17 extends DayBase {
         public void moveLeftIfPossible() {
             if (leftFree()) --x;
         }
-
-/*
-        public boolean isHere(int x, int y) {
-            return shape.filledHere(x - this.x, y - this.y);
-        }
-*/
     }
 
     @Value
@@ -241,6 +264,7 @@ public class Day17 extends DayBase {
                 },
         };
 
+        int id;
         byte[][] shape;
         int[] lowest;
         int width, height;
@@ -248,6 +272,7 @@ public class Day17 extends DayBase {
         private static final Map<Integer, Shape> shapes = new HashMap<>(5);
 
         private Shape(int object) {
+            this.id = object;
             this.shape = SHAPES[object];
             this.width = shape[0].length;
             this.height = shape.length;
@@ -277,18 +302,8 @@ public class Day17 extends DayBase {
                         rock.chamber.colMin[x] = Math.max(rock.chamber.colMin[x], y);
                     }
                 }
-
             }
         }
-
-/*
-        public boolean filledHere(int x, int y) {
-            if (x >= 0 && x < width && y >= 0 && y < height) {
-                return shape[Math.abs(y - height + 1)][x] == 1;
-            }
-            return false;
-        }
-*/
 
         public boolean downFree(byte[][] matrix, int posX, int posY) {
             for (int x = posX, sx = 0; x < posX + width; ++x, ++sx) {
