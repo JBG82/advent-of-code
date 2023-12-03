@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 import lombok.Data;
@@ -13,25 +13,25 @@ import java.util.function.Predicate;
 public class Day18 extends DayBase {
 
     public String resolveExample1() {
-        Matrix matrix = new Matrix(getLinesFromInputFile("/input_day18_example.txt"));
+        Matrix matrix = new Matrix(getLinesFromInputFile("/y2022/input_day18_example.txt"));
         return matrix.calculatePuzzle1();
     }
 
 
     @Override
     public String resolvePuzzle1() throws Exception {
-        Matrix matrix = new Matrix(getLinesFromInputFile("/input_day18.txt"));
+        Matrix matrix = new Matrix(getLinesFromInputFile("/y2022/input_day18.txt"));
         return matrix.calculatePuzzle1();
     }
 
     public String resolveExample2() {
-        Matrix matrix = new Matrix(getLinesFromInputFile("/input_day18_example.txt"));
+        Matrix matrix = new Matrix(getLinesFromInputFile("/y2022/input_day18_example.txt"));
         return matrix.calculatePuzzle2();
     }
 
     @Override
     public String resolvePuzzle2() throws Exception {
-        Matrix matrix = new Matrix(getLinesFromInputFile("/input_day18.txt"));
+        Matrix matrix = new Matrix(getLinesFromInputFile("/y2022/input_day18.txt"));
         return matrix.calculatePuzzle2();
     }
 

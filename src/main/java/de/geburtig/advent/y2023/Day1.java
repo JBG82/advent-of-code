@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class Day1 extends DayBase {
     @Override
     public String resolvePuzzle1() throws Exception {
-        List<String> lines = getLinesFromInputFile("/y2023/input_day1.txt");
+        List<String> lines = getLinesFromInputFile("/de/geburtig/advent/y2023/input_day1.txt");
 
         Pattern pattern = Pattern.compile("\\d(.*\\d)?");
         int result = 0;
@@ -38,7 +38,7 @@ public class Day1 extends DayBase {
 
     @Override
     public String resolvePuzzle2() throws Exception {
-        List<String> lines = getLinesFromInputFile("/y2023/input_day1.txt");
+        List<String> lines = getLinesFromInputFile("/de/geburtig/advent/y2023/input_day1.txt");
 //        List<String> lines = getLinesFromInputFile("/y2023/input_day1_example2.txt");
 
         Pattern pattern = Pattern.compile("(\\d|one|two|three|four|five|six|seven|eight|nine)");

@@ -1,15 +1,13 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Day4 {
 
     public int resolvePuzzle1() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day4.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day4.txt").toURI());
 
         int sum = 0;
         String[] elf;
@@ -30,7 +28,7 @@ public class Day4 {
     }
 
     public int resolvePuzzle2() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day4.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day4.txt").toURI());
 
         int sum = 0;
         String[] elf;

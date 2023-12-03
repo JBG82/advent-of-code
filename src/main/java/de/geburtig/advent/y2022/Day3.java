@@ -1,20 +1,15 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Day3 {
 
     public int resolvePuzzle1() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day3.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day3.txt").toURI());
 
         AtomicInteger sum = new AtomicInteger(0);
         for (String line : Files.lines(resource).toList()) {
@@ -30,7 +25,7 @@ public class Day3 {
     }
 
     public int resolvePuzzle2() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day3.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day3.txt").toURI());
 
         List<String> lines = Files.readAllLines(resource);
         AtomicInteger sum = new AtomicInteger(0);

@@ -1,12 +1,10 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -23,7 +21,7 @@ public class Day7 extends DayBase {
     }
 
     private void initFilesystem() throws Exception {
-        Scanner scanner = createInputFileScanner("/input_day7.txt").useDelimiter("\n\\$ ");
+        Scanner scanner = createInputFileScanner("/y2022/input_day7.txt").useDelimiter("\n\\$ ");
         filesystem = new Filesystem();
 
         int count = 0;

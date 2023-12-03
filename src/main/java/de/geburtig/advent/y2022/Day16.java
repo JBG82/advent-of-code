@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 import de.geburtig.advent.util.Permutation;
@@ -22,7 +22,7 @@ public class Day16 extends DayBase {
     private final List<Valve> valves = new ArrayList<>();
 
     public String resolveExample1() {
-        initValvesFromInputFile("/input_day16_example.txt");
+        initValvesFromInputFile("/y2022/input_day16_example.txt");
         Graph graph = new Graph();
         Valve startPos = valves.stream().filter(v -> v.name.equals("AA")).findAny().orElseThrow();
         List<Valve> relevantValves = valves.stream().filter(v -> v.flowRate > 0).toList();
@@ -36,7 +36,7 @@ public class Day16 extends DayBase {
 
     @Override
     public String resolvePuzzle1() throws Exception {
-        initValvesFromInputFile("/input_day16.txt");
+        initValvesFromInputFile("/y2022/input_day16.txt");
         Graph graph = new Graph();
         Valve startPos = valves.stream().filter(v -> v.name.equals("AA")).findAny().orElseThrow();
         List<Valve> relevantValves = valves.stream().filter(v -> v.flowRate > 0).toList();
@@ -49,7 +49,7 @@ public class Day16 extends DayBase {
     }
 
     public String resolveExample2() {
-        initValvesFromInputFile("/input_day16_example.txt");
+        initValvesFromInputFile("/y2022/input_day16_example.txt");
         List<Valve> relevantValves = valves.stream().filter(v -> v.flowRate > 0).toList();
 
         Permutation<String> perm = new Permutation<>(relevantValves.stream().map(Valve::name).toList());
@@ -94,7 +94,7 @@ public class Day16 extends DayBase {
 
     @Override
     public String resolvePuzzle2() throws Exception {
-        initValvesFromInputFile("/input_day16.txt");
+        initValvesFromInputFile("/y2022/input_day16.txt");
         Graph graph = new Graph();
         Valve startPos = valves.stream().filter(v -> v.name.equals("AA")).findAny().orElseThrow();
         List<Valve> relevantValves = valves.stream().filter(v -> v.flowRate > 0).toList();

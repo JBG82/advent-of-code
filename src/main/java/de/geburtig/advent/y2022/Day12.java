@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 import lombok.Data;
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Day12 extends DayBase {
 
     public String resolveExample1() throws Exception {
-        HightMap map = new HightMap(getLinesFromInputFile("/input_day12_example.txt"));
+        HightMap map = new HightMap(getLinesFromInputFile("/y2022/input_day12_example.txt"));
         map.scanPaths();
         System.out.println("Got " + map.possiblePaths.size() + " possible paths to goal");
 //        System.out.println(map.possiblePaths.stream().mapToInt(p -> p.stack.size()).min());

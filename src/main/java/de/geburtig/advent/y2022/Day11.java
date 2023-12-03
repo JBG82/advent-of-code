@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 import lombok.AllArgsConstructor;
@@ -14,14 +14,14 @@ import java.util.stream.IntStream;
 public class Day11 extends DayBase {
 
     public String resolveExample1() throws Exception {
-        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/input_day11_example.txt"));
+        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/y2022/input_day11_example.txt"));
         game.worryOperator = old -> old / 3;
         game.rounds(20);
         return String.valueOf(game.calculateResult());
     }
 
     public String resolveExample2() throws Exception {
-        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/input_day11_example.txt"));
+        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/y2022/input_day11_example.txt"));
         // Kleinstes gemeinsames Vielfaches der Divisoren ist 96577
         game.worryOperator = old -> old % 96577;
         game.rounds(10_000);
@@ -30,7 +30,7 @@ public class Day11 extends DayBase {
 
     @Override
     public String resolvePuzzle1() throws Exception {
-        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/input_day11.txt"));
+        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/y2022/input_day11.txt"));
         game.worryOperator = old -> old / 3;
         game.rounds(20);
         return String.valueOf(game.calculateResult());
@@ -38,7 +38,7 @@ public class Day11 extends DayBase {
 
     @Override
     public String resolvePuzzle2() throws Exception {
-        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/input_day11.txt"));
+        KeepAwayGame game = new KeepAwayGame(createInputFileScanner("/y2022/input_day11.txt"));
         // Kleinstes gemeinsames Vielfaches der Divisoren ist 9699690
         game.worryOperator = old -> old % 9699690;
         game.rounds(10_000);

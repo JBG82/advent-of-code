@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 import lombok.Setter;
@@ -10,13 +10,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.geburtig.advent.Day17.Chamber.CHECK_FOR_MATRIX_REDUCE_AT;
-import static de.geburtig.advent.Day17.Chamber.MATRIX_HEIGHT;
+import static de.geburtig.advent.y2022.Day17.Chamber.CHECK_FOR_MATRIX_REDUCE_AT;
+import static de.geburtig.advent.y2022.Day17.Chamber.MATRIX_HEIGHT;
 
 public class Day17 extends DayBase {
 
     public String resolveExample1() {
-        Game game = new Game(getLinesFromInputFile("/input_day17_example.txt").get(0));
+        Game game = new Game(getLinesFromInputFile("/y2022/input_day17_example.txt").get(0));
         game.setEndObjectDropsAfter(2022);
         game.process();
         return String.valueOf(game.chamber.overallTowerHeight);
@@ -24,14 +24,14 @@ public class Day17 extends DayBase {
 
     @Override
     public String resolvePuzzle1() throws Exception {
-        Game game = new Game(getLinesFromInputFile("/input_day17.txt").get(0));
+        Game game = new Game(getLinesFromInputFile("/y2022/input_day17.txt").get(0));
         game.setEndObjectDropsAfter(2022);
         game.process();
         return String.valueOf(game.chamber.overallTowerHeight);
     }
 
     public String resolveExample2() {
-        Game game = new Game(getLinesFromInputFile("/input_day17_example.txt").get(0));
+        Game game = new Game(getLinesFromInputFile("/y2022/input_day17_example.txt").get(0));
         game.setEndObjectDropsAfter(1_000_000_000_000L);
         game.setRepetitionOptimization(true);
 
@@ -51,7 +51,7 @@ public class Day17 extends DayBase {
 
     @Override
     public String resolvePuzzle2() throws Exception {
-        Game game = new Game(getLinesFromInputFile("/input_day17.txt").get(0));
+        Game game = new Game(getLinesFromInputFile("/y2022/input_day17.txt").get(0));
         game.setEndObjectDropsAfter(1_000_000_000_000L);
         game.setRepetitionOptimization(true);
         game.process();

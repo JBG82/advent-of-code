@@ -1,16 +1,15 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Day8 extends DayBase {
 
     private final int[][] trees;
 
     public Day8() {
-        List<String> lines = getLinesFromInputFile("/input_day8.txt");
+        List<String> lines = getLinesFromInputFile("/y2022/input_day8.txt");
         int maxX = lines.get(0).length();
         int maxY = lines.size();
         trees = new int[maxY][maxX];

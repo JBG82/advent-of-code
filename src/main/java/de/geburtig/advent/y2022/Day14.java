@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 
@@ -21,27 +21,27 @@ public class Day14 extends DayBase {
     int lying;
 
     public String resolveExample1() {
-        initFromInputFile("/input_day14_example.txt", false);
+        initFromInputFile("/y2022/input_day14_example.txt", false);
         letItPour();
         return String.valueOf(lying);
     }
 
     @Override
     public String resolvePuzzle1() throws Exception {
-        initFromInputFile("/input_day14.txt", false);
+        initFromInputFile("/y2022/input_day14.txt", false);
         letItPour();
         return String.valueOf(lying);
     }
 
     public String resolveExample2() {
-        initFromInputFile("/input_day14_example.txt", true);
+        initFromInputFile("/y2022/input_day14_example.txt", true);
         letItPour();
         return String.valueOf(lying);
     }
 
     @Override
     public String resolvePuzzle2() throws Exception {
-        initFromInputFile("/input_day14.txt", true);
+        initFromInputFile("/y2022/input_day14.txt", true);
         letItPour();
         return String.valueOf(lying);
     }

@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 import lombok.Data;
@@ -6,14 +6,9 @@ import lombok.Data;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Day15 extends DayBase {
 
@@ -24,7 +19,7 @@ public class Day15 extends DayBase {
     private static final int GAP = 5_000_000;
 
     public String resolveExample1() {
-        initFromInputFile("/input_day15_example.txt");
+        initFromInputFile("/y2022/input_day15_example.txt");
 
         BitSet bitSet = new BitSet();
         for (Sensor sensor : sensors) {
@@ -36,7 +31,7 @@ public class Day15 extends DayBase {
 
     @Override
     public String resolvePuzzle1() throws Exception {
-        initFromInputFile("/input_day15.txt");
+        initFromInputFile("/y2022/input_day15.txt");
 
         BitSet bitSet = new BitSet();
         for (Sensor sensor : sensors) {
@@ -50,7 +45,7 @@ public class Day15 extends DayBase {
 
     @Override
     public String resolvePuzzle2() throws Exception {
-        initFromInputFile("/input_day15.txt");
+        initFromInputFile("/y2022/input_day15.txt");
 
 //        3267339
         BitSet bitSet = new BitSet();

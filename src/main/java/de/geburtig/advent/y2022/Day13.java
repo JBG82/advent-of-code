@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 import lombok.NonNull;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import static de.geburtig.advent.Day13.Result.*;
+import static de.geburtig.advent.y2022.Day13.Result.*;
 
 public class Day13 extends DayBase {
 
@@ -23,24 +23,24 @@ public class Day13 extends DayBase {
     }
 
     public String resolveExample1() throws Exception {
-        Scanner scanner = createInputFileScanner("/input_day13_example.txt").useDelimiter("\n\n");
+        Scanner scanner = createInputFileScanner("/y2022/input_day13_example.txt").useDelimiter("\n\n");
         return processForPuzzle1(scanner);
     }
 
     @Override
     public String resolvePuzzle1() throws Exception {
-        Scanner scanner = createInputFileScanner("/input_day13.txt").useDelimiter("\n\n");
+        Scanner scanner = createInputFileScanner("/y2022/input_day13.txt").useDelimiter("\n\n");
         return processForPuzzle1(scanner);
     }
 
     public String resolveExample2() throws Exception {
-        List<String> lines = new ArrayList<>(getLinesFromInputFile("/input_day13_example.txt"));
+        List<String> lines = new ArrayList<>(getLinesFromInputFile("/y2022/input_day13_example.txt"));
         return processForPuzzle2(lines);
     }
 
     @Override
     public String resolvePuzzle2() throws Exception {
-        List<String> lines = new ArrayList<>(getLinesFromInputFile("/input_day13.txt"));
+        List<String> lines = new ArrayList<>(getLinesFromInputFile("/y2022/input_day13.txt"));
         return processForPuzzle2(lines);
     }
 

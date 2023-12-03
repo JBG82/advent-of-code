@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class Day9 extends DayBase {
     public String resolvePuzzle1() throws Exception {
         Rope rope = new Rope(2);
 
-        List<String> lines = getLinesFromInputFile("/input_day9.txt");
+        List<String> lines = getLinesFromInputFile("/y2022/input_day9.txt");
         lines.forEach(line -> {
             String[] part = line.split(" ");
             rope.move(part[0], Integer.parseInt(part[1]));
@@ -28,7 +28,7 @@ public class Day9 extends DayBase {
     public String resolvePuzzle2() {
         Rope rope = new Rope(10);
 
-        List<String> lines = getLinesFromInputFile("/input_day9.txt");
+        List<String> lines = getLinesFromInputFile("/y2022/input_day9.txt");
         lines.forEach(line -> {
             String[] part = line.split(" ");
             rope.move(part[0], Integer.parseInt(part[1]));

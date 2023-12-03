@@ -1,17 +1,16 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import de.geburtig.advent.base.DayBase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 public class Day10 extends DayBase {
 
     @Override
     public String resolvePuzzle1() throws Exception {
         CPU cpu = new CPU();
-        List<String> lines = getLinesFromInputFile("/input_day10.txt");
+        List<String> lines = getLinesFromInputFile("/y2022/input_day10.txt");
         lines.forEach(cpu::process);
         return String.valueOf(cpu.signals.stream().mapToInt(Integer::intValue).sum());
     }
@@ -19,7 +18,7 @@ public class Day10 extends DayBase {
     @Override
     public String resolvePuzzle2() {
         CPU cpu = new CPU();
-        List<String> lines = getLinesFromInputFile("/input_day10.txt");
+        List<String> lines = getLinesFromInputFile("/y2022/input_day10.txt");
         lines.forEach(cpu::process);
         cpu.renderOutput();
         return "null";

@@ -1,9 +1,8 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -45,7 +44,7 @@ public class Day5 {
 
     public String resolvePuzzle1() throws Exception {
         initStacks();
-        Path resource = Paths.get(getClass().getResource("/input_day5.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day5.txt").toURI());
         Files.lines(resource).skip(10).forEach(line -> {
             String[] split = line.split(" ");
             int count = Integer.parseInt(split[1]);
@@ -58,7 +57,7 @@ public class Day5 {
 
     public String resolvePuzzle2() throws Exception {
         initStacks();
-        Path resource = Paths.get(getClass().getResource("/input_day5.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day5.txt").toURI());
         Files.lines(resource).skip(10).forEach(line -> {
             String[] split = line.split(" ");
             int count = Integer.parseInt(split[1]);

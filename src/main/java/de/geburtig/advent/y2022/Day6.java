@@ -1,17 +1,13 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-import java.util.stream.IntStream;
 
 public class Day6 {
 
     public int resolvePuzzle1() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day6.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day6.txt").toURI());
 
         String seq = Files.readAllLines(resource).get(0);
         for (int i = 4; i < seq.length(); ++i) {
@@ -23,7 +19,7 @@ public class Day6 {
     }
 
     public int resolvePuzzle2() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day6.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day6.txt").toURI());
 
         String seq = Files.readAllLines(resource).get(0);
         for (int i = 14; i < seq.length(); ++i) {

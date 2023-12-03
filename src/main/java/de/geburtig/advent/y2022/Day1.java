@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,7 +10,7 @@ import java.util.List;
 public class Day1 {
 
     public int resolvePuzzle1() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day1.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day1.txt").toURI());
 
         int sum = 0;
         int max = 0;
@@ -26,7 +26,7 @@ public class Day1 {
     }
 
     public int resolvePuzzle2() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day1.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day1.txt").toURI());
 
         List<Integer> list = new ArrayList<>(Arrays.asList(0, 0, 0));
 

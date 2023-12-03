@@ -1,4 +1,4 @@
-package de.geburtig.advent;
+package de.geburtig.advent.y2022;
 
 import lombok.Value;
 
@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 public class Day2 {
 
     public int resolvePuzzle1() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day2.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day2.txt").toURI());
 
         int sum = 0;
         for (String line : Files.lines(resource).toList()) {
@@ -19,7 +19,7 @@ public class Day2 {
     }
 
     public int resolvePuzzle2() throws Exception {
-        Path resource = Paths.get(getClass().getResource("/input_day2.txt").toURI());
+        Path resource = Paths.get(getClass().getResource("/y2022/input_day2.txt").toURI());
 
         int sum = 0;
         for (String line : Files.lines(resource).toList()) {
