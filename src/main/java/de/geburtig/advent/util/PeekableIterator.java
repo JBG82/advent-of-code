@@ -71,8 +71,11 @@ public class PeekableIterator<E> implements Iterator<E> {
         return list.get(--index);
     }
 
-    public E peekPrev() {
-        return list.get(index - 1);
+    public Optional<E> peekPrev() {
+        if (index - 1 < 0) {
+            return Optional.empty();
+        }
+        return Optional.of(list.get(index - 1));
     }
 
     public E peekPrevPlus(final int offset) {
