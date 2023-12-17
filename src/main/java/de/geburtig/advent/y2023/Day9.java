@@ -18,6 +18,7 @@ public class Day9 {
 //        List<String> input = InputResolver.fetchLinesFromInputFile("input_day9_example.txt", Day9.class);
         List<String> input = InputResolver.fetchLinesFromInputFile("input_day9.txt", Day9.class);
 
+        // Puzzle 1
         long result = 0;
         for (String line : input) {
             Sequence sequence = Sequence.of(line);
@@ -26,20 +27,33 @@ public class Day9 {
             result += sequence.numbers.getLast().value;
         }
         System.out.println("Result 1: " + result);
+
+        // Puzzle 2
+        result = 0;
+        for (String line : input) {
+            Sequence sequence = Sequence.of(line);
+            sequence.generatePreviousNumber();
+//            System.out.println(sequence.toOutputString());
+            result += sequence.numbers.getFirst().value;
+        }
+        // 209 too low
+        System.out.println("Result 2: " + result);
     }
 
     @Data
     static class Sequence {
         private final List<Position> numbers;
+        private final Sequence superSequence;
         private final Sequence subSequence;
         private Boolean allZero = null;
 
         static Sequence of(final String line) {
             List<Position> list = Arrays.stream(line.split(" ")).mapToLong(Long::parseLong).mapToObj(Position::new).toList();
-            return new Sequence(list);
+            return new Sequence(list, null);
         }
 
-        private Sequence(final List<Position> numbers) {
+        private Sequence(final List<Position> numbers, final Sequence superSequence) {
+            this.superSequence = superSequence;
             this.numbers = new ArrayList<>(numbers);
             this.subSequence = createSubSequenceIfNeeded(this);
         }
@@ -53,7 +67,7 @@ public class Day9 {
                     pos.setPre2(new Position(pos.value - pos.pre1.value));
                     newSequence.add(pos.getPre2());
                 }
-                return new Sequence(newSequence);
+                return new Sequence(newSequence, sequence);
             }
             return null;
         }
@@ -64,14 +78,6 @@ public class Day9 {
             }
             return allZero;
         }
-
-//        Position getLast() {
-//            return numbers.isEmpty() ? null : numbers.getLast();
-//        }
-
-//        void add(final Position position) {
-//            numbers.add(position);
-//        }
 
         public String toOutputString() {
             String indent = "";
@@ -99,6 +105,15 @@ public class Day9 {
                 Position pre1 = numbers.getLast();
                 Position pre2 = subSequence.numbers.getLast();
                 numbers.add(new Position(pre1, pre2));
+            }
+        }
+
+        public void generatePreviousNumber() {
+            if (subSequence == null) {
+                numbers.add(0, new Position(0));
+            } else {
+                subSequence.generatePreviousNumber();
+                numbers.add(0, new Position(numbers.getFirst().value - subSequence.numbers.getFirst().value));
             }
         }
     }
