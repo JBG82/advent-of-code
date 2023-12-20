@@ -1,122 +1,128 @@
+/*
+ * Copyright (C) CredaRate Solutions GmbH
+ */
 package de.geburtig.advent.y2023;
 
 import de.geburtig.advent.util.InputResolver;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * https://adventofcode.com/2023/day/10
+ */
 public class Day10 {
-    static char[][] map = new char[140][140];
-    static char[][] formatMap = new char[140][140];
 
-    static long[][] followMap = new long[140][140];
+    private static int mapHeight, mapWidth;
+    private static char[][] map;
 
-    static char[][] check = new char[140][140];
+    /** In der followMap wird der Weg des "Loops" verzeichnet */
+    static long[][] followMap;
 
-    static int mapWidth, mapHeight;
-
-    static char[][] doubleMap = new char[280][280];
 
     public static void main(final String[] args) {
-//        List<String> input = InputResolver.fetchLinesFromInputFile("input_day10_example.txt", Day10.class);
-//        List<String> input = InputResolver.fetchLinesFromInputFile("input_day10_example2.txt", Day10.class);
+//        List<String> input = InputResolver.fetchLinesFromInputFile("input_day10_example.txt", Day10New.class);
+//        List<String> input = InputResolver.fetchLinesFromInputFile("input_day10_example2.txt", Day10New.class);
+//        List<String> input = InputResolver.fetchLinesFromInputFile("input_day10_example3.txt", Day10New.class);
+//        List<String> input = InputResolver.fetchLinesFromInputFile("input_day10_example4.txt", Day10New.class);
         List<String> input = InputResolver.fetchLinesFromInputFile("input_day10.txt", Day10.class);
 
         mapHeight = input.size();
         mapWidth = input.getFirst().length();
 
         // Input to map
+        map = new char[mapHeight][mapWidth];
         for (int i = 0; i < input.size(); ++i) {
             map[i] = input.get(i).toCharArray();
         }
 
-        // Resolve start position and build formatted map
+        // Resolve start position and format map
         Pos startPos = null;
         for (int y = 0; y < mapHeight; ++y) {
             for (int x = 0; x < mapWidth; ++x) {
-                formatMap[y][x] = formatted(map[y][x], x, y);
                 if (map[y][x] == 'S') {
                     startPos = new Pos(x, y);
                 }
-//                System.out.print(formatMap[y][x]);
+                map[y][x] = formatted(map[y][x], x, y);
             }
-//            System.out.println();
         }
+        System.out.println("startPos=" + startPos);
 
-        System.out.println(startPos);
+        // Resolve way of loop beginning from the start position
+        followMap = new long[mapHeight][mapWidth];
         followMap[startPos.y][startPos.x] = -1;
-        System.out.println(followMap[startPos.y][startPos.x]);
 
-        Step nextStep = new Step(startPos, startPos.go(Direction.EAST));
+        // In what direction should the first step go?
+        Direction firstDirection = switch (map[startPos.y][startPos.x]) {
+            case '═', '╔', '╚' -> Direction.EAST;
+            case '╝', '║' -> Direction.NORTH;
+            case '╗' -> Direction.SOUTH;
+            default -> throw new RuntimeException("Blahblah");
+        };
+
+        Step nextStep = new Step(startPos, startPos.go(firstDirection));
         int step = 0;
         do {
             followMap[nextStep.to.y][nextStep.to.x] = ++step;
-            nextStep = getNextStep(nextStep);
-            if (map[nextStep.to.y][nextStep.to.x] == 'S') {
+            nextStep = resolveNextStep(nextStep);
+            if (followMap[nextStep.to.y][nextStep.to.x] == -1) {
                 ++step;
                 break;
             }
         } while (followMap[nextStep.to.y][nextStep.to.x] == 0);
         System.out.println("Completed the cycle after " + step + " steps");
+        // 6875
         System.out.println("Result 1: " + (step / 2));
 
+//        output(map);
+
+        int result2 = 0;
         for (int y = 0; y < mapHeight; ++y) {
+            boolean inside = false;
+            Direction from = null;
             for (int x = 0; x < mapWidth; ++x) {
-                check[y][x] = followMap[y][x] != 0 ? 'o' : '.';
-                if (followMap[y][x] == 0 && formatMap[y][x] != '.') {
-                    formatMap[y][x] = ' ';
-                }
-//                System.out.print(formatMap[y][x]);
-            }
-//            System.out.println();
-        }
-
-        for (int i = 0; i < mapWidth; ++i) {
-            traverse(new Pos(i, 0));
-        }
-        traverse(new Pos(mapWidth - 1, mapHeight - 1));
-
-        System.out.println();
-        System.out.println();
-
-        int count = 0;
-        for (int y = 0; y < mapHeight; ++y) {
-            for (int x = 0; x < mapWidth; ++x) {
-//                System.out.print(check[y][x]);
-                if (check[y][x] == '.') {
-                    ++count;
-                    System.out.print('.');
-                } else {
-                    System.out.print(check[y][x] == '_' ? ' ' : formatMap[y][x]);
+                char c = map[y][x];
+                if (followMap[y][x] == 0) {
+                    map[y][x] = inside ? '▒' : ' ';
+                    if (inside) {
+                        map[y][x] = '▒';
+                        ++result2;
+                    } else {
+                        map[y][x] = ' ';
+                    }
+                } else if (c == '╔') {
+                    from = Direction.SOUTH;
+                } else if (c == '╚') {
+                    from = Direction.NORTH;
+                } else if (c == '║' || (c == '╗' && from == Direction.NORTH) || (c == '╝' && from == Direction.SOUTH)) {
+                    inside = !inside;
                 }
             }
-            System.out.println();
         }
 
-        // 743 too high
-        //  68 not right
-        System.out.println("Result 2: " + count);
+//        output(map);
 
-        for (int y = 0; y < mapHeight; ++y) {
-            for (int x = 0; x < mapWidth; ++x) {
-                doubleMap[y*2+0][x*2+0] = ' ';
-                doubleMap[y*2+0][x*2+1] = in(formatMap[y][x], '║', '╝', '╚') ? '║' : ' ';
-                doubleMap[y*2+1][x*2+0] = in(formatMap[y][x], '═', '╝', '╗') ? '═' : ' ';
-                doubleMap[y*2+1][x*2+1] = formatMap[y][x];
-            }
+        // 471
+        System.out.println("Result 2: " + result2);
+    }
+
+    private static Step resolveNextStep(final Step prevStep) {
+        Pos pos = prevStep.to;
+        Direction dir = prevStep.direction();
+        char c = map[pos.y][pos.x];
+        Direction newDir;
+        if (c == '╗') {
+            newDir = dir == Direction.EAST ? Direction.SOUTH : Direction.WEST;
+        } else if (c == '╔') {
+            newDir = dir == Direction.WEST ? Direction.SOUTH : Direction.EAST;
+        } else if (c == '╚') {
+            newDir = dir == Direction.WEST ? Direction.NORTH : Direction.EAST;
+        } else if (c == '╝') {
+            newDir = dir == Direction.EAST ? Direction.NORTH : Direction.WEST;
+        } else {
+            newDir = dir;
         }
-
-        traverse2(new Pos(0, 0));
-        traverse2(new Pos(doubleMap.length-2, doubleMap.length-2));
-
-        for (int y = 0; y < mapHeight*2; ++y) {
-            for (int x = 0; x < mapWidth*2; ++x) {
-                System.out.print(doubleMap[y][x]);
-            }
-            System.out.println();
-        }
-
+        return new Step(pos, pos.go(newDir));
     }
 
     // ═ (205)
@@ -135,13 +141,13 @@ public class Day10 {
             case '7' -> '╗';
             case 'S' -> {
                 List<Direction> dirs = new ArrayList<>();
-                if (in(map[y - 1][x], '7', '|', 'F')) {
+                if (y > 0 && in(map[y - 1][x], '7', '╗', '|', '║', 'F', '╔')) {
                     dirs.add(Direction.NORTH);
                 }
-                if (in(map[y + 1][x], 'J', '|', 'L')) {
+                if (in(map[y + 1][x], 'J', '╝', '|', '║', 'L', '╚')) {
                     dirs.add(Direction.SOUTH);
                 }
-                if (in(map[y][x - 1], 'L', '-', 'F')) {
+                if (in(map[y][x - 1], 'L', '╚', '-', '═', 'F', '╔')) {
                     dirs.add(Direction.WEST);
                 }
                 if (in(map[y][x + 1], 'J', '-', '7')) {
@@ -166,47 +172,14 @@ public class Day10 {
         return false;
     }
 
-    static void traverse(Pos pos) {
-        if (pos.x >= 0 && pos.x < mapWidth && pos.y >= 0 && pos.y < mapHeight && check[pos.y][pos.x] == '.') {
-            check[pos.y][pos.x] = '_';
-            traverse(pos.go(Direction.EAST));
-            traverse(pos.go(Direction.SOUTH));
-            traverse(pos.go(Direction.WEST));
-            traverse(pos.go(Direction.NORTH));
+    static void output(final char[][] map) {
+        for (int y = 0; y < map.length; ++y) {
+            for (int x = 0; x < map[y].length; ++x) {
+                System.out.print(map[y][x]);
+            }
+            System.out.println();
         }
     }
-
-    static void traverse2(Pos pos) {
-        if (pos.x >= 0 && pos.x < mapWidth*2 && pos.y >= 0 && pos.y < mapHeight*2 && doubleMap[pos.y][pos.x] == ' ') {
-            doubleMap[pos.y][pos.x] = '▒';
-            traverse2(pos.go(Direction.EAST));
-            traverse2(pos.go(Direction.SOUTH));
-            traverse2(pos.go(Direction.WEST));
-            traverse2(pos.go(Direction.NORTH));
-        }
-    }
-
-    private static Step getNextStep(final Step prevStep) {
-        Pos pos = prevStep.to;
-        Direction dir = prevStep.direction();
-        char c = map[pos.y][pos.x];
-        Direction newDir;
-        if (c == '7') {
-            newDir = dir == Direction.EAST ? Direction.SOUTH : Direction.WEST;
-        } else if (c == 'F') {
-            newDir = dir == Direction.WEST ? Direction.SOUTH : Direction.EAST;
-        } else if (c == 'L') {
-            newDir = dir == Direction.WEST ? Direction.NORTH : Direction.EAST;
-        } else if (c == 'J') {
-            newDir = dir == Direction.EAST ? Direction.NORTH : Direction.WEST;
-        } else {
-            newDir = dir;
-        }
-        return new Step(pos, pos.go(newDir));
-    }
-
-//    static Pos nextPosFrom(final Pos pos) {
-//    }
 
     record Step(Pos from, Pos to) {
         Direction direction() {
@@ -217,7 +190,7 @@ public class Day10 {
         }
     }
     record Pos(int x, int y) {
-        Pos go(Direction direction) {
+        Pos go(final Direction direction) {
             return switch (direction) {
                 case NORTH -> new Pos(x, y - 1);
                 case EAST -> new Pos(x + 1, y);
