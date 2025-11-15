@@ -10,10 +10,13 @@ import java.util.function.Consumer;
 /**
  * Erzeugt für eine Liste mit (normalerweise) ungleichen Elementen alle möglichen Permutationen, also alle Listen, die
  * dieselben Elemente in unterschiedlichen Reihenfolgen beinhalten.
- * Auf diese Permutationen kann über folgende zwei Varianten zugegriffern werden:
+ * Auf diese Permutationen kann über folgende zwei Varianten zugegriffen werden:
  * 1.) Mit der Kombination aus hasNext() und next()
  * 2.) Mit Methode forEach(), in diesem Fall wird ein Consumer mitgeliefert, der die Permutationen verwendet.
  * ACHTUNG bei Variante 1: Listen mit 10 Elementen gehen gerade noch, ab 11 Elementen geht der Heap Space in die Knie!
+ *
+ * TODO: Die Elemente werden nicht auf Gleichheit geprüft, die Übergabe von [+, +, -] liefert [+, +, -] entsprechend
+ *  zweimal!
  *
  * @param <T> Typ der übergebenen Liste
  */
@@ -44,6 +47,15 @@ public class Permutation<T> {
 //        switchSequenceList.forEach(System.out::println);
     }
 
+    /**
+     * TODO: Alle Permutationen einer bestimmten länge aus den übergebenen möglichen Werten pro Element
+     * @param values Mögliche Ausprägungen der einzelnen Elemente
+     * @param size Fixe Anzahl der Ausgabewerte
+     */
+    public Permutation(final List<T> values, final int size) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
     private Action initSequence(final List<T> values, Action action, int p) {
         sequenceInitialized = true;
         if (p == 1) {
@@ -61,7 +73,7 @@ public class Permutation<T> {
         return action;
     }
 
-    public long factorial(int x) {
+    private long factorial(int x) {
         return x == 1 ? 1 : x * factorial(x - 1);
     }
 

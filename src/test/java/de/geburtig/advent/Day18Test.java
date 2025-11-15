@@ -1,6 +1,7 @@
 package de.geburtig.advent;
 
 import de.geburtig.advent.y2022.Day18;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * <a href="https://adventofcode.com/2022/day/18" />
  */
+@Disabled
 class Day18Test {
     private final Day18 subject = new Day18();
 

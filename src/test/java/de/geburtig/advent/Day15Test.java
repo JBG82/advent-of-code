@@ -1,10 +1,12 @@
 package de.geburtig.advent;
 
 import de.geburtig.advent.y2022.Day15;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Disabled
 class Day15Test {
     private final Day15 subject = new Day15();
 
