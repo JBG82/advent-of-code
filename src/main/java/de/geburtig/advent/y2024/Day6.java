@@ -32,7 +32,7 @@ public class Day6 {
             }
             ++y;
         }
-        State[][] mapAtStart = CollectionUtil.copyArray(map);
+//        State[][] mapAtStart = CollectionUtil.copyArray(map);
         guard = new Guard(guardAtStart.pos, Direction.NORTH);
 
         List<Pos> visitedList = Collections.emptyList();
@@ -48,7 +48,8 @@ public class Day6 {
         // Now trying to put an additional obstacle in every visited position and run it again...
         List<Pos> potentialObstacles = new ArrayList<>();
         for (Pos pos : visitedList) {
-            State[][] editedMap = CollectionUtil.copyArray(mapAtStart);
+            State[][] editedMap = null;
+//            State[][] editedMap = CollectionUtil.copyArray(mapAtStart);
             guard = new Guard(guardAtStart.pos, Direction.NORTH);
             editedMap[pos.x][pos.y] = State.OBSTACLE;
             try {
