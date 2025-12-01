@@ -17,15 +17,29 @@ public class InputResolver {
         }
     }
 
-//    protected Path getInputFilePath(final String path) {
-//        try {
-//            return Paths.get(getClass().getResource(path).toURI());
-//        } catch (URISyntaxException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//    protected Scanner createInputFileScanner(final String inputFilePath) throws IOException {
-//        return new Scanner(getInputFilePath(inputFilePath));
-//    }
+    public static char[][] fetchInputAsCharArray(final String path, final Class<?> ref) {
+        List<String> lines = fetchLinesFromInputFile(path, ref);
+        char[][] result = new char[lines.getFirst().length()][lines.size()];
+        for (int y = 0; y < lines.size(); y++) {
+            char[] chars = lines.get(y).toCharArray();
+            for (int x = 0; x < chars.length; x++) {
+                result[x][y] = chars[x];
+            }
+        }
+        return result;
+    }
+
+    public static int[][] fetchInputAsIntArray(final String path, final Class<?> ref) {
+        List<String> lines = fetchLinesFromInputFile(path, ref);
+        int[][] result = new int[lines.getFirst().length()][lines.size()];
+        for (int y = 0; y < lines.size(); y++) {
+            char[] chars = lines.get(y).toCharArray();
+            for (int x = 0; x < chars.length; x++) {
+                result[x][y] = chars[x] - 48;
+            }
+        }
+        return result;
+    }
+
 
 }
