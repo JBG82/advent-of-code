@@ -27,29 +27,23 @@ public class Day3 {
         System.out.println(result);
     }
 
-    private static int fetchJoltageFromLinePart1(String line) {
-        int firstValue = 0, secondValue = 0;
-        for (int i = 0; i < line.length(); i++) {
-            int v = line.charAt(i) - 48;
-            if (v > firstValue && i < line.length() - 1) {
-                firstValue = v;
-                secondValue = -1;
-            } else if (v > secondValue) {
-                secondValue = v;
-            }
-        }
-        return firstValue * 10 + secondValue;
+    private static long fetchJoltageFromLinePart1(String line) {
+        return fetchJoltageFromLine(line, 2);
     }
 
     private static long fetchJoltageFromLinePart2(String line) {
-        int[] highestValue = new int[12];
+        return fetchJoltageFromLine(line, 12);
+    }
+
+    private static long fetchJoltageFromLine(final String line, final int resultLength) {
+        int[] highestValue = new int[resultLength];
         for (int i = 0; i < line.length(); i++) {
             int v = line.charAt(i) - 48;
             boolean overrun = false;
-            for (int n = 0; n < 12; ++n) {
+            for (int n = 0; n < resultLength; ++n) {
                 if (overrun) {
                     highestValue[n] = 0;
-                } else if (v > highestValue[n] && i <= line.length() + n - 12) {
+                } else if (v > highestValue[n] && i <= line.length() + n - resultLength) {
                     highestValue[n] = v;
                     overrun = true;
                 }
