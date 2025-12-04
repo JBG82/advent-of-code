@@ -5,9 +5,6 @@ package de.geburtig.advent.y2025;
 
 import de.geburtig.advent.util.InputResolver;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * https://adventofcode.com/2025/day/4/input
  */
@@ -21,8 +18,6 @@ public class Day4 {
         int accessableRolls = solvePart1();
         int removableRolls = solvePart2();
 
-        // Example: 13
-        // Example: 43 (Part 2)
         // Part 1:  1540
         // Part 2:  8972
         System.out.println(accessableRolls);
@@ -47,25 +42,22 @@ public class Day4 {
     private static int solvePart2() {
         int removedRollsOverall = 0;
 
-        List<Pos> toRemove = new ArrayList<>();
+        int justRemoved;
         do {
-            toRemove.clear();
+            justRemoved = 0;
             for (int y = 0; y < map.length; y++) {
                 for (int x = 0; x < map[y].length; x++) {
                     Pos pos = new Pos(x, y);
                     if (isRole(pos)) {
                         if (countSurroundingRolls(pos) < 4) {
-                            toRemove.add(pos);
+                            ++justRemoved;
+                            map[x][y] = 'X';
                         }
                     }
                 }
             }
-
-            removedRollsOverall += toRemove.size();
-            for (Pos pos : toRemove) {
-                map[pos.x][pos.y] = '.';
-            }
-        } while (!toRemove.isEmpty());
+            removedRollsOverall += justRemoved;
+        } while (justRemoved > 0);
 
         return removedRollsOverall;
     }
