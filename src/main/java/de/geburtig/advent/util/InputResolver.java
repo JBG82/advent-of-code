@@ -53,6 +53,22 @@ public class InputResolver {
         return result;
     }
 
+    public static Map2D<Integer> fetchInputAsIntMap(final String path) {
+        return fetchInputAsIntMap(path, resolveCallingClass());
+    }
+
+    private static Map2D<Integer> fetchInputAsIntMap(final String path, final Class<?> ref) {
+        List<String> lines = fetchLinesFromInputFile(path, ref);
+        Integer[][] result = new Integer[lines.getFirst().length()][lines.size()];
+        for (int y = 0; y < lines.size(); y++) {
+            char[] chars = lines.get(y).toCharArray();
+            for (int x = 0; x < chars.length; x++) {
+                result[x][y] = chars[x] - 48;
+            }
+        }
+        return new Map2D<>(result);
+    }
+
     private static Class<?> resolveCallingClass() {
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         for (int i = 3; i < stackTraceElements.length; i++) {
