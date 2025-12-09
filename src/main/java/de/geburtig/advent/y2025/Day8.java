@@ -5,9 +5,12 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * https://adventofcode.com/2025/day/8
+ */
 public class Day8 {
+
     public static void main(final String[] args) {
         List<String> input = InputResolver.fetchLinesFromInputFile("input_day8.txt");
         List<Box> boxes = input.stream().map(l -> {
@@ -23,6 +26,37 @@ public class Day8 {
             }
         }
         possibleConnections.sort(Comparator.comparingDouble(Connection::getDistance));
+        System.out.println("Got " + possibleConnections.size() + " possible connections");
+
+        // Part 1: 84968
+        System.out.println("Part 1: " + solvePart1(possibleConnections));
+        // Part 2: 8663467782
+        System.out.println("Part 2: " + solvePart2(possibleConnections));
+    }
+
+    static void mergeCircuits(List<Circuit> circuits) {
+        boolean changed;
+        do {
+            changed = false;
+            int i = 0;
+            do {
+                Circuit c1 = circuits.get(i);
+                int j = i + 1;
+                while (j < circuits.size()) {
+                    Circuit c2 = circuits.get(j);
+                    if (c1.overlaps(c2)) {
+                        c1.merge(c2);
+                        circuits.remove(c2);
+                        changed = true;
+                    } else {
+                        ++j;
+                    }
+                }
+            } while (++i < circuits.size());
+        } while (changed);
+    }
+
+    static long solvePart1(List<Connection> possibleConnections) {
         ArrayList<Connection> connections = new ArrayList<>(possibleConnections.subList(0, 1000));
 
         List<Circuit> circuits = new ArrayList<>();
@@ -37,55 +71,42 @@ public class Day8 {
             circuits.add(new Circuit(con));
         }
 
-        System.out.println(circuits.size());
-        System.out.println("Got " + circuits.stream().flatMap(c -> c.getBoxes().stream()).distinct().count() + " boxes");
+        mergeCircuits(circuits);
+        int[] array = circuits.stream().mapToInt(Circuit::size).sorted().toArray();
+        return ((long) array[array.length - 1]) * array[array.length - 2] * array[array.length - 3];
+    }
 
-        boolean changed;
+    static long solvePart2(List<Connection> possibleConnections) {
+        int amountOfConnections = 5720;
+        long circuitCount, boxesCount, result;
         do {
-            changed = false;
-            System.out.println("iteration");
-            int i = 0;
-            do {
-                Circuit c1 = circuits.get(i);
-                int j = i + 1;
-                while (j < circuits.size()) {
-                    Circuit c2 = circuits.get(j);
-                    if (c1.overlaps(c2)) {
-                        c1.merge(c2);
-                        System.out.println(circuits.size());
-                        circuits.remove(c2);
-                        System.out.println(circuits.size());
-                        changed = true;
-                    } else {
-                        ++j;
+            System.out.println("Trying " + amountOfConnections + " connections...");
+
+            ArrayList<Connection> connections = new ArrayList<>(possibleConnections.subList(0, amountOfConnections));
+
+            List<Circuit> circuits = new ArrayList<>();
+            outer:
+            for (Connection con : connections) {
+                for (Circuit circuit : circuits) {
+                    if (circuit.contains(con)) {
+                        circuit.add(con);
+                        continue outer;
                     }
                 }
-            } while (++i < circuits.size());
-        } while (changed);
-
-        System.out.println(circuits.size());
-        System.out.println("Got " + circuits.stream().flatMap(c -> c.getBoxes().stream()).distinct().count() + " boxes");
-
-//        circuits.forEach(System.out::println);
-
-        for (int x = 0; x < circuits.size() - 1; ++x) {
-            for (int y = x + 1; y < circuits.size(); ++y) {
-                if (circuits.get(x).overlaps(circuits.get(y))) {
-                    System.out.println("Overlapping:");
-//                    System.out.println(circuits.get(x));
-//                    System.out.println(circuits.get(y));
-//                    throw new RuntimeException("Got one!");
-                }
+                circuits.add(new Circuit(con));
             }
-        }
+            mergeCircuits(circuits);
 
-        // Part 1: 84968
-//        System.out.println();
-        int[] array = circuits.stream().mapToInt(Circuit::size).sorted().toArray();
-        Arrays.stream(array).forEach(x -> System.out.print(x + " "));
-        System.out.println();
-        long result = ((long) array[array.length - 1]) * array[array.length - 2] * array[array.length - 3];
-        System.out.println(result);
+            circuitCount = circuits.size();
+            boxesCount = circuits.stream().flatMap(c -> c.getBoxes().stream()).distinct().count();
+//            System.out.println("Got " + circuits.size() + " circuits with " + boxesCount + " contained boxes");
+
+            Connection lastConnection = possibleConnections.get(amountOfConnections - 1);
+            result = (long) lastConnection.b1.pos().x() * lastConnection.b2.pos().x();
+//            System.out.println("Multiplied x of last connection is " + result);
+            amountOfConnections++;
+        } while (circuitCount != 1 || boxesCount != 1000);
+        return result;
     }
 
     @Data
